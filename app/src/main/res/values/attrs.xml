@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="borderWidth" format="dimension"/>
+    <attr name="color" format="color"/>
+    <attr name="controlCircleRadius" format="dimension"/>
+    <attr name="textSize" format="dimension"/>
+
+    <declare-styleable name="EditableEditText">
+        <attr name="borderWidth"/>
+        <attr name="color"/>
+        <attr name="controlCircleRadius"/>
+        <attr name="textSize"/>
+    </declare-styleable>
+</resources>
