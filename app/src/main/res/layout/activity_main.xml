@@ -5,11 +5,16 @@
     android:layout_height="match_parent"
     tools:context="com.app.cgb.editableedittext.MainActivity">
 
-    <com.app.cgb.editableedittext.EditableEditText
-        android:id="@+id/eet"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:textSize="16sp"
-        android:text="xxxxxxxxxxxxx" />
+    <!--<com.app.cgb.editableedittext.EditableEditText-->
+        <!--android:id="@+id/eet"-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:textSize="16sp"-->
+        <!--android:text="xxxxxxxxxxxxx" />-->
+    <com.app.cgb.editableedittext.EditTextManagerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.app.cgb.editableedittext.EditTextManagerView>
 
 </FrameLayout>

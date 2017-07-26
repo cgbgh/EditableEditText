@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ public class EditableEditText extends FrameLayout {
     private static final int DEFAULT_CIRCLE_SIZE = 36;
     private static final int DEFAULT_CORLOR = Color.BLUE;
     private static final int DEFAULT_TEXT_SIZE = 16;
+    private static final long DEFAULT_LONG_PRESS_TIME = 2000;
     private float lastY;
     private float lastX;
     private Paint borderPaint;
@@ -52,6 +54,11 @@ public class EditableEditText extends FrameLayout {
     private int paddingTop;
     private int paddingRight;
     private int paddingLeft;
+    private EditText et;
+    private long downTime;
+    private boolean isBorderVisible;
+    private int touchSlop;
+    private OnFocus onFocus;
 
     public EditableEditText(Context context) {
         this(context, null);
@@ -68,11 +75,11 @@ public class EditableEditText extends FrameLayout {
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         setWillNotDraw(false);
+        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         initAttrs(context, attrs, defStyleAttr);
         setupEditTextStyle(context);
-//        setPadding(getPaddingLeft(), getPaddingRight(), getPaddingTop(), getPaddingBottom());
         getPaddings();
-        initPaint();
+        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
     }
 
     private void getPaddings() {
@@ -92,7 +99,7 @@ public class EditableEditText extends FrameLayout {
     }
 
     private void setupEditTextStyle(Context context) {
-        EditText et = new EditText(context);
+        et = new EditText(context);
         et.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
         et.setGravity(Gravity.TOP);
         et.setSingleLine(false);
@@ -102,6 +109,12 @@ public class EditableEditText extends FrameLayout {
         et.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (!isBorderVisible) {
+                    showBorder();
+                }
+                if (onFocus != null){
+                    onFocus.onFocus(EditableEditText.this);
+                }
                 downX = lastX = event.getRawX();
                 downY = lastY = event.getRawY();
                 setStateByPoint(event.getX(), event.getY());
@@ -353,4 +366,29 @@ public class EditableEditText extends FrameLayout {
         this.textSize = textSize;
         invalidate();
     }
+
+
+    public void hideBorder() {
+        isBorderVisible = false;
+        setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
+        setWillNotDraw(true);
+        invalidate();
+    }
+
+    public void showBorder() {
+        isBorderVisible = true;
+        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+        setWillNotDraw(false);
+        invalidate();
+
+    }
+
+    public void setOnFocus(OnFocus onFocus) {
+        this.onFocus = onFocus;
+    }
+
+    interface OnFocus {
+        void onFocus(EditableEditText view);
+    }
+
 }
