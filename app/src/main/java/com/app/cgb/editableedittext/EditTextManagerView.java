@@ -73,16 +73,6 @@ public class EditTextManagerView extends FrameLayout implements EditableEditText
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
-    }
-
-    @Override
     public void onFocus(EditableEditText view) {
         hideChild(view);
     }
