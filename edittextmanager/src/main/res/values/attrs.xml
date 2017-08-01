@@ -4,11 +4,22 @@
     <attr name="color" format="color"/>
     <attr name="controlCircleRadius" format="dimension"/>
     <attr name="textSize" format="dimension"/>
+    <attr name="itemWidth" format="dimension"/>
+    <attr name="itemHeight" format="dimension"/>
 
     <declare-styleable name="EditableEditText">
         <attr name="borderWidth"/>
         <attr name="color"/>
         <attr name="controlCircleRadius"/>
         <attr name="textSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="EditTextManagerView">
+        <attr name="borderWidth"/>
+        <attr name="color"/>
+        <attr name="controlCircleRadius"/>
+        <attr name="textSize"/>
+        <attr name="itemWidth"/>
+        <attr name="itemHeight"/>
     </declare-styleable>
 </resources>

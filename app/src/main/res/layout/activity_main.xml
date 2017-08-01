@@ -3,11 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.app.cgb.editableedittext.MainActivity">
 
     <com.app.cgb.edittextmanager.EditTextManagerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:borderWidth="8dp"
+        app:color="@color/colorAccent"
+        app:controlCircleRadius="24dp"
+        app:textSize="16sp">
 
     </com.app.cgb.edittextmanager.EditTextManagerView>
 

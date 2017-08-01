@@ -33,7 +33,6 @@ public class EditableEditText extends FrameLayout {
     private static final int DEFAULT_CIRCLE_SIZE = 36;
     private static final int DEFAULT_CORLOR = Color.BLUE;
     private static final int DEFAULT_TEXT_SIZE = 16;
-    private static final long DEFAULT_LONG_PRESS_TIME = 2000;
     private float lastY;
     private float lastX;
     private Paint borderPaint;
@@ -104,7 +103,7 @@ public class EditableEditText extends FrameLayout {
         et.setGravity(Gravity.TOP);
         et.setSingleLine(false);
         et.setHorizontallyScrolling(false);
-        et.setBackground(null);
+        et.setBackgroundDrawable(null);
         et.setTextSize(textSize);
         et.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -118,7 +117,7 @@ public class EditableEditText extends FrameLayout {
 
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
-        int insetSize = borderWidth + circleRadius * 2;
+        int insetSize = circleRadius * 2;
         super.setPadding(left + insetSize, top + insetSize, right + insetSize, bottom + insetSize);
     }
 
