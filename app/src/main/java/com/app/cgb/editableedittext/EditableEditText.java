@@ -56,9 +56,9 @@ public class EditableEditText extends FrameLayout {
     private int paddingLeft;
     private EditText et;
     private long downTime;
-    private boolean isBorderVisible;
+    private boolean isBorderVisible = true;
     private int touchSlop;
-    private OnFocus onFocus;
+    private OnStateChange onStateChange;
 
     public EditableEditText(Context context) {
         this(context, null);
@@ -109,15 +109,7 @@ public class EditableEditText extends FrameLayout {
         et.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (!isBorderVisible) {
-                    showBorder();
-                }
-                if (onFocus != null){
-                    onFocus.onFocus(EditableEditText.this);
-                }
-                downX = lastX = event.getRawX();
-                downY = lastY = event.getRawY();
-                setStateByPoint(event.getX(), event.getY());
+                onActionDown(event);
                 return false;
             }
         });
@@ -154,13 +146,16 @@ public class EditableEditText extends FrameLayout {
     }
 
     private void removeSelf() {
+        if (!isBorderVisible) return;
         ViewGroup parent = (ViewGroup) getParent();
         if (parent != null) {
+            if (onStateChange != null) onStateChange.onDelete();
             parent.removeView(this);
         }
     }
 
     private void actionByState(float x, float y) {
+        if (!isBorderVisible) return;
         if (state == STATE_MOVE) {
             move(x, y);
         } else {
@@ -259,8 +254,8 @@ public class EditableEditText extends FrameLayout {
     }
 
     private void setupMinSize() {
-        minWidth = (borderWidth + circleRadius) * 2 + textSize;
-        minHeight = (borderWidth + circleRadius) * 2 + textSize;
+        minWidth = (borderWidth + circleRadius * 2) * 2 + textSize;
+        minHeight = (borderWidth + circleRadius * 2) * 2 + textSize;
     }
 
     private void drawText(Canvas canvas) {
@@ -281,9 +276,7 @@ public class EditableEditText extends FrameLayout {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                downX = lastX = event.getRawX();
-                downY = lastY = event.getRawY();
-                setStateByPoint(event.getX(), event.getY());
+                onActionDown(event);
                 if (state == STATE_DELETE) {
                     removeSelf();
                 }
@@ -305,6 +298,18 @@ public class EditableEditText extends FrameLayout {
         return true;
     }
 
+    private void onActionDown(MotionEvent event) {
+        if (!isBorderVisible) {
+            showBorder();
+        }
+        if (onStateChange != null){
+            onStateChange.onFocus(EditableEditText.this);
+        }
+        downX = lastX = event.getRawX();
+        downY = lastY = event.getRawY();
+        setStateByPoint(event.getX(), event.getY());
+    }
+
     private void hideKeyBoard() {
         InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (im.isActive()) {
@@ -321,6 +326,8 @@ public class EditableEditText extends FrameLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 return true;
+            case MotionEvent.ACTION_UP:
+                return false;
         }
         return false;
     }
@@ -369,6 +376,10 @@ public class EditableEditText extends FrameLayout {
 
 
     public void hideBorder() {
+        if (et.getText() == null || et.getText().length() <= 0) {
+            removeSelf();
+            return;
+        }
         isBorderVisible = false;
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         setWillNotDraw(true);
@@ -383,12 +394,13 @@ public class EditableEditText extends FrameLayout {
 
     }
 
-    public void setOnFocus(OnFocus onFocus) {
-        this.onFocus = onFocus;
+    public void setOnStateChange(OnStateChange onStateChange) {
+        this.onStateChange = onStateChange;
     }
 
-    interface OnFocus {
+    interface OnStateChange {
         void onFocus(EditableEditText view);
+        void onDelete();
     }
 
 }

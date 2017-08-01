@@ -2,6 +2,10 @@ package com.app.cgb.editableedittext;
 
 import org.junit.Test;
 
+import java.util.Stack;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
 import static org.junit.Assert.*;
 
 /**
@@ -14,4 +18,10 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void test() {
+
+    }
+
 }
