@@ -1,4 +1,4 @@
-package com.app.cgb.editableedittext;
+package com.app.cgb.edittextmanager;
 
 import android.content.Context;
 import android.support.annotation.AttrRes;
