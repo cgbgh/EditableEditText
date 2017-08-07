@@ -9,9 +9,9 @@
     <com.app.cgb.edittextmanager.EditTextManagerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:borderWidth="8dp"
-        app:color="@color/colorAccent"
-        app:controlCircleRadius="24dp"
+        app:borderWidth="2dp"
+        app:color="@color/colorPrimary"
+        app:controlCircleRadius="12dp"
         app:textSize="16sp">
 
     </com.app.cgb.edittextmanager.EditTextManagerView>

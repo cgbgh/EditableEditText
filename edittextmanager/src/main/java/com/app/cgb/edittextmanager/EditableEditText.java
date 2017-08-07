@@ -156,7 +156,10 @@ public class EditableEditText extends FrameLayout {
     private void actionByState(float x, float y) {
         if (!isBorderVisible) return;
         if (state == STATE_MOVE) {
-            move(x, y);
+            moveByTranslation(x, y);
+//            moveByLayout((int)x,(int)y);
+//            moveByParams(x,y);
+//            moveByScroll(x,y);
         } else {
             resize((int) x, (int) y);
         }
@@ -217,7 +220,7 @@ public class EditableEditText extends FrameLayout {
         }
     }
 
-    private void move(float x, float y) {
+    private void moveByTranslation(float x, float y) {
         float translationX = getTranslationX() + x;
         float translationY = getTranslationY() + y;
         float viewX = getX();
@@ -236,6 +239,40 @@ public class EditableEditText extends FrameLayout {
         }
         setTranslationX(translationX);
         setTranslationY(translationY);
+
+    }
+
+    /**
+     * 用layout方法刷新会回到原位
+     *
+     * @param x
+     * @param y
+     */
+    private void moveByLayout(int x, int y) {
+        layout(getLeft() + x, getTop() + y, getRight() + x, getBottom() + y);
+    }
+
+    /**
+     * 网上有提到部分手机不适用
+     *
+     * @param x
+     * @param y
+     */
+    private void moveByParams(float x, float y) {
+        ViewGroup.MarginLayoutParams params = (MarginLayoutParams) getLayoutParams();
+        params.leftMargin += x;
+        params.topMargin += y;
+        setLayoutParams(params);
+    }
+
+    /**
+     * 只能在控件内部滑动，超出范围会被遮挡
+     *
+     * @param x
+     * @param y
+     */
+    private void moveByScroll(float x, float y) {
+        scrollBy(-(int) x, -(int) y);
     }
 
     @Override
@@ -253,8 +290,8 @@ public class EditableEditText extends FrameLayout {
     }
 
     private void setupMinSize() {
-        minWidth = (borderWidth + circleRadius * 2) * 2 + textSize;
-        minHeight = (borderWidth + circleRadius * 2) * 2 + textSize;
+        minWidth = circleRadius * 4;
+        minHeight = circleRadius * 4 ;
     }
 
     private void drawText(Canvas canvas) {
@@ -301,7 +338,7 @@ public class EditableEditText extends FrameLayout {
         if (!isBorderVisible) {
             showBorder();
         }
-        if (onStateChange != null){
+        if (onStateChange != null) {
             onStateChange.onFocus(EditableEditText.this);
         }
         downX = lastX = event.getRawX();
@@ -324,7 +361,10 @@ public class EditableEditText extends FrameLayout {
                 downY = lastY = ev.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                return true;
+                if (Math.abs(downX - ev.getRawX()) > touchSlop
+                        || Math.abs(downY - ev.getRawY()) > touchSlop)
+                    return true;
+                else return false;
             case MotionEvent.ACTION_UP:
                 return false;
         }
@@ -399,6 +439,7 @@ public class EditableEditText extends FrameLayout {
 
     interface OnStateChange {
         void onFocus(EditableEditText view);
+
         void onDelete();
     }
 
