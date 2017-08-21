@@ -13,7 +13,7 @@
         app:color="@color/colorPrimary"
         app:controlCircleRadius="12dp"
         app:textSize="16sp">
-
     </com.app.cgb.edittextmanager.EditTextManagerView>
+    
 
 </FrameLayout>

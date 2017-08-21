@@ -35,8 +35,8 @@ public class EditableEditText extends FrameLayout {
     private static final int DEFAULT_TEXT_SIZE = 16;
     private float lastY;
     private float lastX;
-    private Paint borderPaint;
     private int state;
+    private Paint borderPaint;
     private Paint circlePaint;
     private TextPaint textPaint;
     private int borderWidth;
@@ -54,7 +54,6 @@ public class EditableEditText extends FrameLayout {
     private int paddingRight;
     private int paddingLeft;
     private EditText et;
-    private long downTime;
     private boolean isBorderVisible = true;
     private int touchSlop;
     private OnStateChange onStateChange;
@@ -79,6 +78,7 @@ public class EditableEditText extends FrameLayout {
         setupEditTextStyle(context);
         getPaddings();
         setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+        initPaint();
     }
 
     private void getPaddings() {
@@ -125,17 +125,14 @@ public class EditableEditText extends FrameLayout {
         borderPaint = new Paint();
         borderPaint.setStyle(Paint.Style.STROKE);
         borderPaint.setStrokeWidth(borderWidth);
-        borderPaint.setColor(color);
         borderPaint.setAntiAlias(true);
 
         circlePaint = new Paint();
         circlePaint.setAntiAlias(true);
         circlePaint.setStyle(Paint.Style.FILL);
-        circlePaint.setColor(color);
 
         textPaint = new TextPaint();
         textPaint.setAntiAlias(true);
-        textPaint.setTextSize(circleRadius * 1.5f);
         textPaint.setColor(Color.WHITE);
     }
 
@@ -200,16 +197,6 @@ public class EditableEditText extends FrameLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         getParentSize();
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
     }
 
     private void getParentSize() {
@@ -277,10 +264,7 @@ public class EditableEditText extends FrameLayout {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        initPaint();
         setPadding(paddingLeft, paddingRight, paddingTop, paddingBottom);
-        setupMinSize();
-        super.onDraw(canvas);
         int width = getWidth();
         int height = getHeight();
         drawBorder(canvas, width, height);
@@ -295,16 +279,19 @@ public class EditableEditText extends FrameLayout {
     }
 
     private void drawText(Canvas canvas) {
+        textPaint.setTextSize(circleRadius * 1.5f);
         StaticLayout staticLayout = new StaticLayout("X", textPaint, circleRadius * 2, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         staticLayout.draw(canvas);
     }
 
     private void drawCircle(Canvas canvas, int cx, int cy) {
+        circlePaint.setColor(color);
         canvas.drawCircle(cx, cy, circleRadius, circlePaint);
     }
 
     private void drawBorder(Canvas canvas, int width, int height) {
         Rect rect = new Rect(circleRadius, circleRadius, width - circleRadius, height - circleRadius);
+        borderPaint.setColor(color);
         canvas.drawRect(rect, borderPaint);
     }
 
@@ -392,6 +379,7 @@ public class EditableEditText extends FrameLayout {
 
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
+        setupMinSize();
         invalidate();
     }
 
