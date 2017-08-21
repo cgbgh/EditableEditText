@@ -264,7 +264,7 @@ public class EditableEditText extends FrameLayout {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        setPadding(paddingLeft, paddingRight, paddingTop, paddingBottom);
+        setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
         int width = getWidth();
         int height = getHeight();
         drawBorder(canvas, width, height);
@@ -348,10 +348,8 @@ public class EditableEditText extends FrameLayout {
                 downY = lastY = ev.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(downX - ev.getRawX()) > touchSlop
-                        || Math.abs(downY - ev.getRawY()) > touchSlop)
-                    return true;
-                else return false;
+                return Math.abs(downX - ev.getRawX()) > touchSlop
+                        || Math.abs(downY - ev.getRawY()) > touchSlop;
             case MotionEvent.ACTION_UP:
                 return false;
         }
